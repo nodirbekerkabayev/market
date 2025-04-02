@@ -37,14 +37,73 @@ class ProductsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      */
+
+    public function show1(Request $request)
+    {
+        if (!isset($_COOKIE['customer_token'])){
+            $uniqueId = uniqid();
+            Customer::query()->create([
+                'token' => $uniqueId
+            ]);
+            setcookie('customer_token', $uniqueId, time() + (86400 * 30), "/");
+        }
+        $categories = $request->input('categories');
+        $weights = $request->input('weights');
+        $startPrice = $request->input('startPrice');
+        $endPrice = $request->input('endPrice');
+
+        $selectedCategories = Category::whereIn('name', (array) $categories)->pluck('id')->toArray();
+
+        $categoryIds = Category::whereIn('parent_id', $selectedCategories)
+            ->orWhereIn('id', $selectedCategories)
+            ->pluck('id')
+            ->toArray();
+
+        $parentCategories = Category::whereNull('parent_id')
+            ->orderBy('id', 'desc')
+            ->limit(4)
+            ->with('categories')
+            ->get();
+
+        $productsMenu = Category::whereNull('parent_id')
+            ->orderBy('id', 'desc')
+            ->with('categories')
+            ->get();
+
+        $products = Product::query()
+            ->when(!empty($categoryIds), function ($query) use ($categoryIds) {
+                return $query->whereIn('category_id', $categoryIds);
+            })
+            ->when($weights, function ($query) use ($weights) {
+                $productVolumes = Volume::whereIn('name', $weights)->pluck('id');
+                return $query->whereIn('volume_id', $productVolumes);
+            })
+            ->when(isset($startPrice) && isset($endPrice), function ($query) use ($startPrice, $endPrice) {
+                return $query->whereBetween('price', [$startPrice, $endPrice]);
+            })
+            ->orderBy('id', 'desc')
+            ->with('images')
+            ->paginate(10);
+
+        $categories = Category::all();
+
+        $images = Image::paginate(1);
+        $weights = Volume::all(); // **Shu qatorni qo‘sh!**
+
+
+        return view('product', [
+            'products' => $products,
+            'parentCategories' => $parentCategories,
+            'productsMenu' => $productsMenu,
+            'categories' => $categories,
+            'images'=>$images,
+            'weights' => $weights
+        ]);
+    }
 
     public function show(Request $request)
     {
