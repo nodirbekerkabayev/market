@@ -12,13 +12,18 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware(GenerateCustomerToken::class)->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/filter',[ProductsController::class, 'show'])->name('filter');
-    Route::get('/products', [ProductsController::class, 'show1'])->name('product');
-
-
-
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    Route::get('/filter', [ProductsController::class, 'show'])->name('filter');
+    Route::get('/', [HomeController::class, 'index'])->name('index');
+    Route::post('/', [DiscountProductController::class, 'store'])->name('discount.store');
+    Route::get('/about', [HomeController::class, 'about'])->name('about');
+    Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+    Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
+    Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
+    Route::get('/compare', [HomeController::class, 'compare'])->name('compare');
+    Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
+    Route::get('/offers', [HomeController::class, 'offers'])->name('offers');
+    Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
+    Route::get('/products/{id}', [ProductsController::class, 'singleProduct'])->name('single-product');
 
 
     Route::middleware('auth')->group(function ()
@@ -28,6 +33,10 @@ Route::middleware(GenerateCustomerToken::class)->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
-});
 
-require __DIR__.'/auth.php';
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
+
+    require __DIR__.'/auth.php';
+});

@@ -1,7 +1,7 @@
 <x-header title="Online Market"></x-header>
 <!-- Loader -->
 <div class="bb-loader min-w-full w-full h-screen fixed top-[0] left-[0] flex items-center justify-center bg-[#fff] z-[45]">
-    <img src="assets/img/logo/loader.png" alt="loader" class="absolute">
+    <img src="/assets/img/logo/loader.png" alt="loader" class="absolute">
     <span class="loader w-[60px] h-[60px] relative"></span>
 </div>
 
@@ -18,7 +18,7 @@
                     </div>
                     <div class="min-[768px]:w-[50%] min-[576px]:w-full w-full px-[12px]">
                         <ul class="bb-breadcrumb-list mx-[-5px] flex justify-end max-[767px]:justify-center">
-                            <li class="bb-breadcrumb-item text-[14px] font-normal px-[5px]"><a href="{{route('home')}}" class="font-Poppins text-[14px] leading-[28px] tracking-[0.03rem] font-semibold text-[#686e7d]">Home</a></li>
+                            <li class="bb-breadcrumb-item text-[14px] font-normal px-[5px]"><a href="{{route('index')}}" class="font-Poppins text-[14px] leading-[28px] tracking-[0.03rem] font-semibold text-[#686e7d]">Home</a></li>
                             <li class="text-[14px] font-normal px-[5px]"><i class="ri-arrow-right-double-fill text-[14px] font-semibold leading-[28px]"></i></li>
                             <li class="bb-breadcrumb-item font-Poppins text-[#686e7d] text-[14px] leading-[28px] font-normal tracking-[0.03rem] px-[5px] active">Shop Page</li>
                         </ul>
@@ -71,8 +71,8 @@
             <div class="min-[992px]:w-[75%] w-full px-[12px] mb-[24px]">
                 <div class="bb-shop-pro-inner">
                     <div class="flex flex-wrap mx-[-12px] mb-[-24px]">
-{{--                        @dd($product)--}}
-                        @foreach($products as $product)
+                        {{--                        @dd($product)--}}
+
                             <div class="min-[768px]:w-[33.33%] w-[50%] max-[480px]:w-full px-[12px] mb-[24px] pro-bb-content" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
                                 <div class="bb-pro-box bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[20px]">
                                     <div class="bb-pro-img overflow-hidden relative border-b-[1px] border-solid border-[#eee] z-[4]">
@@ -142,66 +142,11 @@
                                 </div>
                             </div>
 
-                        @endforeach
-                        <div class="w-full px-[12px]">
-                            <div
-                                class="bb-pro-pagination mb-[24px] flex justify-between max-[575px]:flex-col max-[575px]:items-center">
-                                <p class="font-Poppins text-[15px] text-[#686e7d] font-light leading-[28px] tracking-[0.03rem] max-[575px]:mb-[10px]">
-                                    Showing {{ $products->firstItem() }}-{{ $products->lastItem() }} of {{ $products->total() }} item(s)</p>
-                                <ul class="flex">
-                                    {{-- Previous Page Link --}}
-                                    @if ($products->onFirstPage())
-                                        <li class="leading-[28px] mr-[6px] opacity-50 pointer-events-none">
-                                            <span
-                                                class="transition-all duration-[0.3s] ease-in-out w-[auto] h-[32px] px-[13px] font-light text-[#fff] leading-[30px] bg-gray-400 font-Poppins tracking-[0.03rem] text-[15px] flex text-center align-top justify-center items-center rounded-[10px] border-[1px] border-solid border-[#eee]">
-                                                    Prev
-                                            </span>
-                                        </li>
-                                    @else
-                                        <li class="leading-[28px] mr-[6px]">
-                                            <a href="{{ $products->previousPageUrl() }}"
-                                               class="transition-all duration-[0.3s] ease-in-out w-[auto] h-[32px] px-[13px] font-light text-[#fff] leading-[30px] bg-[#3d4750] font-Poppins tracking-[0.03rem] text-[15px] flex text-center align-top justify-center items-center rounded-[10px] border-[1px] border-solid border-[#eee]">
-                                                Prev
-                                            </a>
-                                        </li>
-                                    @endif
-
-                                    {{-- Pagination Links --}}
-                                    @foreach ($products->links()->elements[0] as $page => $url)
-                                        <li class="leading-[28px] mr-[6px] {{ $products->currentPage() == $page ? 'active' : '' }}">
-                                            <a href="{{ $url }}"
-                                               class="transition-all duration-[0.3s] ease-in-out w-[32px] h-[32px] font-light {{ $products->currentPage() == $page ? 'text-white bg-[#3d4750]' : 'text-[#777] bg-[#f8f8fb]' }} leading-[32px] font-Poppins tracking-[0.03rem] text-[15px] flex text-center align-top justify-center items-center rounded-[10px] border-[1px] border-solid border-[#eee] hover:bg-[#3d4750] hover:text-[#fff]">
-                                                {{ $page }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-
-                                    {{-- Next Page Link --}}
-                                    @if ($products->hasMorePages())
-                                        <li class="leading-[28px]">
-                                            <a href="{{ $products->nextPageUrl() }}"
-                                               class="next transition-all duration-[0.3s] ease-in-out w-[auto] h-[32px] px-[13px] font-light text-[#fff] leading-[30px] bg-[#3d4750] font-Poppins tracking-[0.03rem] text-[15px] flex text-center align-top justify-center items-center rounded-[10px] border-[1px] border-solid border-[#eee]">
-                                                Next <i
-                                                    class="ri-arrow-right-s-line transition-all duration-[0.3s] ease-in-out ml-[10px] text-[16px] w-[8px] text-[#fff]"></i>
-                                            </a>
-                                        </li>
-                                    @else
-                                        <li class="leading-[28px] opacity-50 pointer-events-none">
-                                            <span
-                                                class="transition-all duration-[0.3s] ease-in-out w-[auto] h-[32px] px-[13px] font-light text-[#fff] leading-[30px] bg-gray-400 font-Poppins tracking-[0.03rem] text-[15px] flex text-center align-top justify-center items-center rounded-[10px] border-[1px] border-solid border-[#eee]">
-                                                Next
-                                            </span>
-                                        </li>
-                                    @endif
-                                </ul>
-
-                            </div>
-                        </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
 
@@ -211,7 +156,7 @@
 <!-- Cart sidebar -->
 <x-cart-sidebar></x-cart-sidebar>
 <!-- Category Popup -->
-<x-category-popup :categories="$categories" :products="$products"></x-category-popup>
+{{--<x-category-popup :categories="$categories" :products="$products"></x-category-popup>--}}
 <!-- Quick view Modal -->
 <x-quick-view-modal></x-quick-view-modal>
 <!-- Newsletter Modal -->
@@ -250,5 +195,4 @@
 
 
 </body>
-
 </html>
